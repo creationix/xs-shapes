@@ -1,118 +1,126 @@
-CC = gcc -g -Os \
+
+###############################################################################
+# Building moddable SDK for host, this gives us `xsc` and `xsl` tools.
+###############################################################################
+
+PLATFORM = lin
+MODDABLE := $(shell pwd)/moddable
+MODDABLE_MAKEFILE = $(MODDABLE)/build/makefiles/$(PLATFORM)
+XSL = $(MODDABLE)/build/bin/$(PLATFORM)/release/xsl
+XSC = $(MODDABLE)/build/bin/$(PLATFORM)/release/xsc
+
+###############################################################################
+# Building our app
+###############################################################################
+
+CC = gcc -g -Os # Change this to preferred compiler
+OUT := $(shell pwd)/out
+COMMONFLAGS = \
+	-I$(MODDABLE)/xs/includes \
+	-I$(MODDABLE)/xs/sources \
+	-I$(MODDABLE)/xs/platforms \
 	-DmxCompile=1 \
 	-DmxRun=1 \
 	-DmxParse=1 \
 	-DmxHostFunctionPrimitive=1
 
 MODULES = \
-	out/shapes.xsb \
-	out/main.xsb
-
+	$(OUT)/shapes.xsb \
+	$(OUT)/main.xsb
 CMODULES = \
-	out/shapes.o
+	$(OUT)/shapes.o \
+	$(OUT)/main.o
+HEADERS = \
+	src/shapes.h \
+	src/types.h
+CFLAGS = $(COMMONFLAGS) \
+	-I$(OUT) \
+	-Wall -Werror -std=c99 
+XSMODULES = \
+	$(OUT)/xs/xsAll.c.o \
+	$(OUT)/xs/xsAPI.c.o \
+	$(OUT)/xs/xsArguments.c.o \
+	$(OUT)/xs/xsArray.c.o \
+	$(OUT)/xs/xsAtomics.c.o \
+	$(OUT)/xs/xsBoolean.c.o \
+	$(OUT)/xs/xsCode.c.o \
+	$(OUT)/xs/xsCommon.c.o \
+	$(OUT)/xs/xsDataView.c.o \
+	$(OUT)/xs/xsDate.c.o \
+	$(OUT)/xs/xsDebug.c.o \
+	$(OUT)/xs/xsError.c.o \
+	$(OUT)/xs/xsFunction.c.o \
+	$(OUT)/xs/xsGenerator.c.o \
+	$(OUT)/xs/xsGlobal.c.o \
+	$(OUT)/xs/xsJSON.c.o \
+	$(OUT)/xs/xsLexical.c.o \
+	$(OUT)/xs/xsMapSet.c.o \
+	$(OUT)/xs/xsMarshall.c.o \
+	$(OUT)/xs/xsMath.c.o \
+	$(OUT)/xs/xsMemory.c.o \
+	$(OUT)/xs/xsModule.c.o \
+	$(OUT)/xs/xsNumber.c.o \
+	$(OUT)/xs/xsObject.c.o \
+	$(OUT)/xs/xsPlatforms.c.o \
+	$(OUT)/xs/xsProfile.c.o \
+	$(OUT)/xs/xsPromise.c.o \
+	$(OUT)/xs/xsProperty.c.o \
+	$(OUT)/xs/xsProxy.c.o \
+	$(OUT)/xs/xsRegExp.c.o \
+	$(OUT)/xs/xsRun.c.o \
+	$(OUT)/xs/xsScope.c.o \
+	$(OUT)/xs/xsScript.c.o \
+	$(OUT)/xs/xsSourceMap.c.o \
+	$(OUT)/xs/xsString.c.o \
+	$(OUT)/xs/xsSymbol.c.o \
+	$(OUT)/xs/xsSyntaxical.c.o \
+	$(OUT)/xs/xsTree.c.o \
+	$(OUT)/xs/xsType.c.o \
+	$(OUT)/xs/xsdtoa.c.o \
+	$(OUT)/xs/xsmc.c.o \
+	$(OUT)/xs/xsre.c.o \
+	$(OUT)/mc.xs.o
+XSFLAGS = $(COMMONFLAGS) \
+	-std=gnu99
 
-XS_DIR = moddable/xs
-LIB_DIR = out/xs
+LIBS = $(CMODULES) $(XSMODULES)
 
-XS_DIRECTORIES = \
-	$(XS_DIR)/includes \
-	$(XS_DIR)/platforms \
-	$(XS_DIR)/sources
 
-XS_HEADERS = \
-	$(XS_DIR)/platforms/lin_xs.h \
-	$(XS_DIR)/platforms/xsPlatform.h \
-	$(XS_DIR)/includes/xs.h \
-	$(XS_DIR)/includes/xsmc.h \
-	$(XS_DIR)/sources/xsCommon.h \
-	$(XS_DIR)/sources/xsAll.h \
-	$(XS_DIR)/sources/xsScript.h
+.PHONY: all run clean distclean
 
-XS_OBJECTS = \
-	$(LIB_DIR)/xsAll.c.o \
-	$(LIB_DIR)/xsAPI.c.o \
-	$(LIB_DIR)/xsArguments.c.o \
-	$(LIB_DIR)/xsArray.c.o \
-	$(LIB_DIR)/xsAtomics.c.o \
-	$(LIB_DIR)/xsBoolean.c.o \
-	$(LIB_DIR)/xsCode.c.o \
-	$(LIB_DIR)/xsCommon.c.o \
-	$(LIB_DIR)/xsDataView.c.o \
-	$(LIB_DIR)/xsDate.c.o \
-	$(LIB_DIR)/xsDebug.c.o \
-	$(LIB_DIR)/xsError.c.o \
-	$(LIB_DIR)/xsFunction.c.o \
-	$(LIB_DIR)/xsGenerator.c.o \
-	$(LIB_DIR)/xsGlobal.c.o \
-	$(LIB_DIR)/xsJSON.c.o \
-	$(LIB_DIR)/xsLexical.c.o \
-	$(LIB_DIR)/xsMapSet.c.o \
-	$(LIB_DIR)/xsMarshall.c.o \
-	$(LIB_DIR)/xsMath.c.o \
-	$(LIB_DIR)/xsMemory.c.o \
-	$(LIB_DIR)/xsModule.c.o \
-	$(LIB_DIR)/xsNumber.c.o \
-	$(LIB_DIR)/xsObject.c.o \
-	$(LIB_DIR)/xsPlatforms.c.o \
-	$(LIB_DIR)/xsProfile.c.o \
-	$(LIB_DIR)/xsPromise.c.o \
-	$(LIB_DIR)/xsProperty.c.o \
-	$(LIB_DIR)/xsProxy.c.o \
-	$(LIB_DIR)/xsRegExp.c.o \
-	$(LIB_DIR)/xsRun.c.o \
-	$(LIB_DIR)/xsScope.c.o \
-	$(LIB_DIR)/xsScript.c.o \
-	$(LIB_DIR)/xsSourceMap.c.o \
-	$(LIB_DIR)/xsString.c.o \
-	$(LIB_DIR)/xsSymbol.c.o \
-	$(LIB_DIR)/xsSyntaxical.c.o \
-	$(LIB_DIR)/xsTree.c.o \
-	$(LIB_DIR)/xsType.c.o \
-	$(LIB_DIR)/xsdtoa.c.o \
-	$(LIB_DIR)/xsmc.c.o \
-	$(LIB_DIR)/xsre.c.o
+all: $(OUT)/myxs
 
-XSC=moddable/build/bin/lin/release/xsc
-XSL=moddable/build/bin/lin/release/xsl
-
-LIBS := out/main.o out/mc.xs.o $(XS_OBJECTS) $(CMODULES)
-
-.PHONY: run clean distclean all
-
-all: out/myxs
-
-out/myxs: $(LIBS)
-	$(CC) $(LIBS) -lm -o $@
-
-out/xs/%.o: moddable/xs/sources/%
-	$(CC) -std=gnu99 -Imoddable/xs/includes -Imoddable/xs/platforms -c $< -o $@
-
-out/mc.xs.o: out/mc.xs.c out/mc.xs.h
-	$(CC) -std=gnu99 -Imoddable/xs/includes -Imoddable/xs/platforms -Imoddable/xs/sources -c $< -o $@
-
-out/main.o: src/main.c out/mc.xs.h
-	$(CC) -Wall -Werror -std=c99 -Iout -Imoddable/xs/includes -Imoddable/xs/sources -Imoddable/xs/platforms -c $< -o $@
-
-out/%.o: src/%.c src/%.h src/types.h
-	$(CC) -Wall -Werror -std=c99 -Imoddable/xs/includes -c $< -o $@
-
-out/%.xsb: src/%.js $(XSC)
-	$(XSC) -c -d -e $< -o out
-
-out/mc.xs.h: out/mc.xs.c
-out/mc.xs.c: $(MODULES) $(XSL)
-	$(XSL) $(MODULES) -o out -b out
-
-run: out/myxs
+run: $(OUT)/myxs
 	$<
 
 clean:
-	rm -f out/*.xs*
+	rm -rf $(OUT)
+	mkdir -p $(OUT)/xs
 
-distclean:
-	rm -rf out
-	mkdir -p out/xs
+distclean: clean
+	git submodule foreach git clean -xdf
 
 $(XSL): $(XSC)
 $(XSC):
-	MODDABLE=$(PWD) $(MAKE) -C moddable/build/lin/makefiles
+	git submodule update --init $(MODDABLE)
+	MODDABLE=$(MODDABLE) $(MAKE) -C $(MODDABLE_MAKEFILE)
+	echo $(XSC)
+
+$(OUT)/myxs: $(LIBS)
+	$(CC) $(LIBS) -lm -o $@
+
+$(OUT)/%.xsb: src/%.js src/%.c $(XSC)
+	$(XSC) -c -d -e $< -o $(OUT)
+
+$(OUT)/mc.xs.o: $(OUT)/mc.xs.c $(OUT)/mc.xs.h
+	$(CC) $(XSFLAGS) -c $< -o $@
+
+$(OUT)/mc.xs.h: $(OUT)/mc.xs.c
+$(OUT)/mc.xs.c: $(XSL) $(MODULES)
+	$(XSL) $(MODULES) -o $(OUT) -b $(OUT)
+
+$(OUT)/xs/%.o: $(MODDABLE)/xs/sources/%
+	$(CC) $(XSFLAGS) -c $< -o $@
+
+$(OUT)/%.o: src/%.c $(HEADERS) $(OUT)/mc.xs.h
+	$(CC) $(CFLAGS) -c $< -o $@
