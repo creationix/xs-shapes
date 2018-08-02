@@ -1,5 +1,8 @@
 
 class Shape @ "my_shape_destructor" {
+    constructor(...args) {
+        this.construct(...args)
+    }
     get x() @ "my_shape_get_x"
     get y() @ "my_shape_get_y"
 }
