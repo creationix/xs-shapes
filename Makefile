@@ -86,12 +86,15 @@ XSFLAGS = $(COMMONFLAGS) \
 LIBS = $(CMODULES) $(XSMODULES)
 
 
-.PHONY: all run clean distclean
+.PHONY: all run debug clean distclean
 
 all: $(OUT)/myxs
 
 run: $(OUT)/myxs
 	clear && echo "\e[34;1mRunning myxs:\e[0m\n" && $< && echo "\n\e[32;1mDone.\e[0m"
+
+debug: $(OUT)/myxs
+	gdb $<
 
 clean:
 	rm -rf $(OUT)

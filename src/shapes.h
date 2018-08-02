@@ -32,10 +32,14 @@ union Shapes {
 };
 
 void my_shape_destructor(void *c);
-void my_shape_position(xsMachine *the);
-void my_rectangle_constructor(xsMachine *the);
-void my_rectangle_area(xsMachine *the);
+void my_shape_get_x(xsMachine *the);
+void my_shape_get_y(xsMachine *the);
 void my_circle_constructor(xsMachine *the);
-void my_circle_area(xsMachine *the);
+void my_circle_get_r(xsMachine *the);
+void my_circle_get_area(xsMachine *the);
+void my_rectangle_constructor(xsMachine *the);
+void my_rectangle_get_w(xsMachine *the);
+void my_rectangle_get_h(xsMachine *the);
+void my_rectangle_get_area(xsMachine *the);
 
 #endif

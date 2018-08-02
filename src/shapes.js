@@ -1,29 +1,18 @@
 
+class Shape @ "my_shape_destructor" {
+    get x() @ "my_shape_get_x"
+    get y() @ "my_shape_get_y"
+}
 
-export class Circle @ "my_shape_destructor" {
+export class Circle extends Shape {
     constructor(x, y, r) @ "my_circle_constructor"
-    position() @ "my_shape_position"
-    area() @ "my_circle_area"
+    get r() @ "my_circle_get_r"
+    get area() @ "my_circle_get_area"
 }
 
-export class Rectangle @ "my_shape_destructor" {
+export class Rectangle extends Shape {
     constructor(x, y, w, h) @ "my_rectangle_constructor"
-    position() @ "my_shape_position"
-    area() @ "my_rectangle_area"
+    get w() @ "my_rectangle_get_w"
+    get h() @ "my_rectangle_get_h"
+    get area() @ "my_rectangle_get_area"
 }
-
-// I want this, but it won't work because the subclass instances aren't host objects:
-
-// class Shape @ "my_shape_destructor" {
-//     position() @ "my_shape_position"
-// }
-
-// export class Circle extends Shape {
-//     constructor(x, y, r) @ "my_circle_constructor"
-//     area() @ "my_circle_area"
-// }
-
-// export class Rectangle extends Shape {
-//     constructor(x, y, w, h) @ "my_rectangle_constructor"
-//     area() @ "my_rectangle_area"
-// }
