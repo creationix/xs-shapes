@@ -1,4 +1,7 @@
-import { Circle, Rectangle } from "shapes"
+import { Utils, Circle, Rectangle } from "shapes"
+const { print } = Utils
+
+print("Hello")
 
 let c = new Circle(30, 20, 10)
 print("c", c)

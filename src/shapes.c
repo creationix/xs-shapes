@@ -102,3 +102,12 @@ void my_circle_get_area(xsMachine *the)
     my_circle_t *circle = c->ptr;
     xsmcSetInteger(xsResult, 3141 * circle->r * circle->r / 1000);
 }
+
+void my_print(xsMachine *the)
+{
+    for (int i = 0; i < xsmcArgc; i++) {
+        if (i) printf(" ");
+        printf("%s", xsmcToString(xsArg(i)));
+    }
+    printf("\n");
+}
