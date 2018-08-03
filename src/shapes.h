@@ -42,6 +42,5 @@ void my_rectangle_get_w(xsMachine *the);
 void my_rectangle_get_h(xsMachine *the);
 void my_rectangle_get_area(xsMachine *the);
 void my_print(xsMachine *the);
-void my_print(xsMachine *the);
 
 #endif

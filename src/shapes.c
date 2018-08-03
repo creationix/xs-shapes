@@ -8,9 +8,7 @@
 void my_shape_destructor(void *data)
 {
     if (!data)
-    {
         return;
-    }
     my_container_t *c = data;
     free(c->ptr);
     c->ptr = NULL;
@@ -98,11 +96,8 @@ void my_print(xsMachine *the)
     for (int i = 0; i < xsmcArgc; i++)
     {
         if (i)
-        {
             printf(" ");
-        }
         printf("%s", xsmcToString(xsArg(i)));
     }
     printf("\n");
 }
-
