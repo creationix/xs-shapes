@@ -13,7 +13,7 @@ XSC = $(MODDABLE)/build/bin/$(PLATFORM)/release/xsc
 # Building our app
 ###############################################################################
 
-CC = gcc -g -Os # Change this to preferred compiler
+CC ?= clang -g -Os # Change this to preferred compiler
 OUT := $(shell pwd)/out
 COMMONFLAGS = \
 	-I$(MODDABLE)/xs/includes \
@@ -91,7 +91,7 @@ LIBS = $(CMODULES) $(XSMODULES)
 all: $(OUT)/myxs
 
 run: $(OUT)/myxs
-	clear && echo "\e[34;1mRunning myxs:\e[0m\n" && $< && echo "\n\e[32;1mDone.\e[0m" || echo "\n\e[31;1mFailed.\e[0m"
+	clear && echo -e "\e[34;1mRunning myxs:\e[0m\n" && $< && echo -e "\n\e[32;1mDone.\e[0m" || echo -e "\n\e[31;1mFailed.\e[0m"
 
 debug: $(OUT)/myxs
 	gdb $<
@@ -103,11 +103,11 @@ clean:
 distclean: clean
 	git submodule foreach git clean -xdf
 
-$(XSL): $(XSC)
+$(XSL):
+	MODDABLE=$(MODDABLE) $(MAKE) -C $(MODDABLE_MAKEFILE) xsl-release
+
 $(XSC):
-	git submodule update --init $(MODDABLE)
-	MODDABLE=$(MODDABLE) $(MAKE) -C $(MODDABLE_MAKEFILE)
-	echo $(XSC)
+	MODDABLE=$(MODDABLE) $(MAKE) -C $(MODDABLE_MAKEFILE) xsc-release
 
 $(OUT)/myxs: $(LIBS)
 	$(CC) $(LIBS) -lm -o $@
