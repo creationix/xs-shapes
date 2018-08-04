@@ -5,7 +5,6 @@ class Shape @ "my_shape_destructor" {
     }
     get x() @ "my_shape_get_x"
     get y() @ "my_shape_get_y"
-    static print(...args) @ "my_print"
 }
 
 export class Circle extends Shape {
