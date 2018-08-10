@@ -3,7 +3,7 @@
 # Building moddable SDK for host, this gives us `xsc` and `xsl` tools.
 ###############################################################################
 
-PLATFORM = lin
+PLATFORM = mac
 MODDABLE := $(shell pwd)/moddable
 MODDABLE_MAKEFILE = $(MODDABLE)/build/makefiles/$(PLATFORM)
 XSL = $(MODDABLE)/build/bin/$(PLATFORM)/release/xsl
@@ -18,11 +18,7 @@ OUT := $(shell pwd)/out
 COMMONFLAGS = \
 	-I$(MODDABLE)/xs/includes \
 	-I$(MODDABLE)/xs/sources \
-	-I$(MODDABLE)/xs/platforms \
-	-DmxCompile=1 \
-	-DmxRun=1 \
-	-DmxParse=1 \
-	-DmxHostFunctionPrimitive=1
+	-I$(MODDABLE)/xs/platforms
 
 MODULES = \
 	$(OUT)/shapes.xsb \
@@ -110,7 +106,7 @@ $(XSC):
 	MODDABLE=$(MODDABLE) $(MAKE) -C $(MODDABLE_MAKEFILE) xsc-release
 
 $(OUT)/myxs: $(LIBS)
-	$(CC) $(LIBS) -lm -o $@
+	$(CC) $(LIBS) -lm -o $@ -framework CoreFoundation
 
 $(OUT)/%.xsb: src/%.js src/%.c $(XSC)
 	$(XSC) -c -d -e $< -o $(OUT)

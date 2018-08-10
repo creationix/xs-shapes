@@ -1,9 +1,7 @@
 #include <stdio.h>
 
-#include "xsAll.h"
+#include "xs.h"
 #include "mc.xs.h"
-
-extern txPreparation *xsPreparation();
 
 ///////////////////////////////////////////////////////////////////////////////
 // Main app testing design.
@@ -11,30 +9,8 @@ extern txPreparation *xsPreparation();
 
 int main(int argc, char *argv[])
 {
-    static txMachine root;
     int error = 0;
-    txMachine *machine = &root;
-    txPreparation *preparation = xsPreparation();
-
-    c_memset(machine, 0, sizeof(txMachine));
-    machine->preparation = preparation;
-    machine->keyArray = preparation->keys;
-    machine->keyCount = (txID)preparation->keyCount + (txID)preparation->creation.keyCount;
-    machine->keyIndex = (txID)preparation->keyCount;
-    machine->nameModulo = preparation->nameModulo;
-    machine->nameTable = preparation->names;
-    machine->symbolModulo = preparation->symbolModulo;
-    machine->symbolTable = preparation->symbols;
-
-    machine->stack = &preparation->stack[0];
-    machine->stackBottom = &preparation->stack[0];
-    machine->stackTop = &preparation->stack[preparation->stackCount];
-
-    machine->firstHeap = &preparation->heap[0];
-    machine->freeHeap = &preparation->heap[preparation->heapCount - 1];
-    machine->aliasCount = (txID)preparation->aliasCount;
-
-    machine = fxCloneMachine(&preparation->creation, machine, "myxs", NULL);
+	xsMachine* machine = fxPrepareMachine(NULL, xsPreparation(), "xs-shapes", NULL, NULL);
 
     xsBeginHost(machine);
     {
